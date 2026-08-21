@@ -1,0 +1,34 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin/css/index_custom.css' %}">
+{% endblock %}
+
+{% block search %}
+  {{ block.super }}
+  {% if status_stats %}
+    <div class="stat-strip">
+      {% for stat in status_stats %}
+        <a class="stat-card{% if request.GET.status == stat.status %} active{% endif %}"
+           href="{% if stat.status %}?status={{ stat.status }}{% else %}.{% endif %}"
+           style="--stat-color: {{ stat.color }};">
+          <span class="stat-count">{{ stat.count }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block result_list %}
+  {{ block.super }}
+  {% if waitlist_slot_notes %}
+    <div class="waitlist-slot-notes">
+      {% for note in waitlist_slot_notes %}
+        <p class="waitlist-slot-note">{{ note }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock %}

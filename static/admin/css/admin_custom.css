@@ -1,0 +1,895 @@
+/*
+ * Luxury Spa — Django Admin White Theme
+ *
+ * Colour palette (matches the public-facing spa site):
+ *   Background:  #F9F8F6  (warm off-white)
+ *   Accent:      #849E8A  (sage green)
+ *   Accent dark: #6B8572  (darker sage for hover states)
+ *   Text:        #2C3E2D  (dark green-grey)
+ *   Border:      #E5E0D8  (soft warm border)
+ *   Surface:     #FFFFFF  (cards / panels)
+ *
+ * Loaded project-wide via templates/admin/base_site.html.
+ *
+ * Django 6.0 ships dark_mode.css + theme.js which inject CSS variables
+ * under html[data-theme="dark"]. We override BOTH :root and [data-theme]
+ * selectors and use !important where needed to guarantee our palette wins.
+ */
+
+/* ── Django CSS custom properties — force light spa palette everywhere ── */
+:root,
+html[data-theme="light"],
+html[data-theme="dark"],
+html[data-theme="auto"] {
+    --primary: #849E8A !important;
+    --accent: #849E8A !important;
+    --secondary: #6B8572 !important;
+    --primary-fg: #FFFFFF !important;
+    --body-fg: #2C3E2D !important;
+    --body-bg: #F9F8F6 !important;
+    --body-quiet-color: #5C6E5D !important;
+    --body-loud-color: #2C3E2D !important;
+
+    --header-color: #2C3E2D !important;
+    --header-bg: #FFFFFF !important;
+    --header-link-color: #849E8A !important;
+    --breadcrumbs-fg: #2C3E2D !important;
+    --breadcrumbs-link-fg: #849E8A !important;
+    --breadcrumbs-bg: #F3F1ED !important;
+
+    --link-fg: #849E8A !important;
+    --link-hover-color: #6B8572 !important;
+    --link-selected-fg: #6B8572 !important;
+
+    --hairline-color: #E5E0D8 !important;
+    --border-color: #E5E0D8 !important;
+
+    --button-fg: #FFFFFF !important;
+    --button-bg: #849E8A !important;
+    --button-hover-bg: #6B8572 !important;
+    --default-button-bg: #849E8A !important;
+    --default-button-hover-bg: #6B8572 !important;
+
+    --close-button-bg: #E5E0D8 !important;
+    --close-button-hover-bg: #D4CFC7 !important;
+
+    --object-tools-fg: #FFFFFF !important;
+    --object-tools-bg: #849E8A !important;
+    --object-tools-hover-bg: #6B8572 !important;
+
+    --darkened-bg: #F3F1ED !important;
+    --selected-bg: #e8f0ea !important;
+    --selected-row: #e8f0ea !important;
+
+    --message-success-bg: #e8f0ea !important;
+    --message-warning-bg: #fef3cd !important;
+    --message-error-bg: #fce4e4 !important;
+}
+
+/* ── Kill Django's dark-mode media query too ─────────────────────────── */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #849E8A !important;
+        --accent: #849E8A !important;
+        --secondary: #6B8572 !important;
+        --primary-fg: #FFFFFF !important;
+        --body-fg: #2C3E2D !important;
+        --body-bg: #F9F8F6 !important;
+        --body-quiet-color: #5C6E5D !important;
+        --body-loud-color: #2C3E2D !important;
+        --header-color: #2C3E2D !important;
+        --header-bg: #FFFFFF !important;
+        --header-link-color: #849E8A !important;
+        --breadcrumbs-fg: #2C3E2D !important;
+        --breadcrumbs-link-fg: #849E8A !important;
+        --breadcrumbs-bg: #F3F1ED !important;
+        --link-fg: #849E8A !important;
+        --link-hover-color: #6B8572 !important;
+        --link-selected-fg: #6B8572 !important;
+        --hairline-color: #E5E0D8 !important;
+        --border-color: #E5E0D8 !important;
+        --button-fg: #FFFFFF !important;
+        --button-bg: #849E8A !important;
+        --button-hover-bg: #6B8572 !important;
+        --default-button-bg: #849E8A !important;
+        --default-button-hover-bg: #6B8572 !important;
+        --close-button-bg: #E5E0D8 !important;
+        --close-button-hover-bg: #D4CFC7 !important;
+        --object-tools-fg: #FFFFFF !important;
+        --object-tools-bg: #849E8A !important;
+        --object-tools-hover-bg: #6B8572 !important;
+        --darkened-bg: #F3F1ED !important;
+        --selected-bg: #e8f0ea !important;
+        --selected-row: #e8f0ea !important;
+        --message-success-bg: #e8f0ea !important;
+        --message-warning-bg: #fef3cd !important;
+        --message-error-bg: #fce4e4 !important;
+    }
+}
+
+/* ── Hide Django's theme toggle (sun/moon icon) — single palette ───── */
+#toggle-theme-link,
+.theme-toggle {
+    display: none !important;
+}
+
+/* ── Global body ────────────────────────────────────────────────────── */
+body,
+html {
+    background: #F9F8F6 !important;
+    color: #2C3E2D !important;
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+#header {
+    background: #FFFFFF !important;
+    color: #2C3E2D !important;
+    border-bottom: 1px solid #E5E0D8 !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+#header a:link,
+#header a:visited {
+    color: #849E8A !important;
+}
+
+#header a:hover,
+#header a:focus {
+    color: #6B8572 !important;
+}
+
+#branding h1,
+#branding h1 a:link,
+#branding h1 a:visited {
+    color: #2C3E2D !important;
+    font-weight: 700;
+}
+
+#user-tools {
+    color: #5C6E5D !important;
+}
+
+#user-tools a {
+    color: #849E8A !important;
+    border-bottom: none;
+}
+
+#user-tools a:hover {
+    color: #6B8572 !important;
+}
+
+/* ── Breadcrumbs ────────────────────────────────────────────────────── */
+div.breadcrumbs {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+    border-bottom: 1px solid #E5E0D8 !important;
+}
+
+div.breadcrumbs a {
+    color: #849E8A !important;
+}
+
+div.breadcrumbs a:hover {
+    color: #6B8572 !important;
+}
+
+/* ── Modules / panels ───────────────────────────────────────────────── */
+.module {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.module h2,
+.module caption {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+    font-weight: 600;
+    border-bottom: 1px solid #E5E0D8 !important;
+}
+
+/* ── Content area ───────────────────────────────────────────────────── */
+#content {
+    background: #F9F8F6 !important;
+}
+
+#content h1 {
+    color: #2C3E2D !important;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────── */
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+.button,
+a.button {
+    background: #849E8A !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.submit-row input:hover,
+.button:hover,
+a.button:hover {
+    background: #6B8572 !important;
+    box-shadow: 0 2px 6px rgba(107, 133, 114, 0.25);
+}
+
+.submit-row input.default {
+    background: #849E8A !important;
+}
+
+.submit-row input.default:hover {
+    background: #6B8572 !important;
+}
+
+input[type="submit"].default:active,
+.submit-row input.default:active {
+    background: #5A7260 !important;
+}
+
+.deletelink,
+.deletelink:link,
+.deletelink:visited {
+    color: #c0392b !important;
+}
+
+/* ── Submit row ─────────────────────────────────────────────────────── */
+.submit-row {
+    background: #F3F1ED !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+    padding: 12px;
+    overflow: visible;
+}
+
+/* ── Tables (changelist) ────────────────────────────────────────────── */
+#result_list {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #E5E0D8 !important;
+}
+
+#result_list table {
+    border-collapse: collapse;
+}
+
+#result_list thead th {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+    border-bottom: 2px solid #E5E0D8 !important;
+    font-weight: 600;
+}
+
+#result_list tbody tr:nth-child(odd) {
+    background: #FFFFFF !important;
+}
+
+#result_list tbody tr:nth-child(even) {
+    background: #FAFAF8 !important;
+}
+
+#result_list tbody tr:hover {
+    background: #e8f0ea !important;
+}
+
+#result_list tbody td,
+#result_list tbody th {
+    border-bottom: 1px solid #E5E0D8 !important;
+    color: #2C3E2D !important;
+}
+
+/* Table links */
+#result_list a {
+    color: #849E8A !important;
+}
+
+#result_list a:hover {
+    color: #6B8572 !important;
+}
+
+/* ── Sidebar / filter ───────────────────────────────────────────────── */
+#changelist-filter {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+    order: 1;
+}
+
+#changelist-filter h2 {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+    border-radius: 8px 8px 0 0;
+}
+
+#changelist-filter h3 {
+    color: #2C3E2D !important;
+    border-bottom: 1px solid #E5E0D8 !important;
+}
+
+#changelist-filter li.selected a {
+    color: #849E8A !important;
+    font-weight: 600;
+}
+
+#changelist-filter a {
+    color: #5C6E5D !important;
+}
+
+#changelist-filter a:hover {
+    color: #849E8A !important;
+}
+
+/* ── Action bar ─────────────────────────────────────────────────────── */
+.actions {
+    background: #F3F1ED !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+.actions select {
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 6px;
+    padding: 6px 10px;
+    background: #FFFFFF !important;
+    color: #2C3E2D !important;
+}
+
+.actions label {
+    color: #2C3E2D !important;
+}
+
+/* ── Object tools (e.g. "Add …" button row) ─────────────────────────── */
+.object-tools a,
+.object-tools a:link,
+.object-tools a:visited {
+    background: #849E8A !important;
+    color: #FFFFFF !important;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.object-tools a:hover {
+    background: #6B8572 !important;
+}
+
+/* ── Pagination ─────────────────────────────────────────────────────── */
+.paginator {
+    background: #F3F1ED !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+    color: #2C3E2D !important;
+}
+
+.paginator a:link,
+.paginator a:visited {
+    color: #849E8A !important;
+}
+
+.paginator a:hover {
+    color: #6B8572 !important;
+}
+
+/* ── Links (general) ────────────────────────────────────────────────── */
+a:link:not(.button),
+a:visited:not(.button) {
+    color: #849E8A !important;
+}
+
+.object-tools a:link,
+.object-tools a:visited {
+    color: #FFFFFF !important;
+}
+
+a:hover:not(.button),
+a:focus:not(.button) {
+    color: #6B8572 !important;
+}
+
+/* ── Fieldsets / form rows ──────────────────────────────────────────── */
+fieldset {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+}
+
+fieldset h2 {
+    color: #2C3E2D !important;
+}
+
+.form-row {
+    border-bottom-color: #E5E0D8 !important;
+}
+
+/* ── Inputs & selects ───────────────────────────────────────────────── */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+textarea,
+select {
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 6px;
+    padding: 6px 10px;
+    background: #FFFFFF !important;
+    color: #2C3E2D !important;
+    transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+    border-color: #849E8A !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(132, 158, 138, 0.15);
+}
+
+/* ── Messages (success/warning/error banners) ───────────────────────── */
+.messagelist li {
+    border-radius: 6px;
+    margin-bottom: 6px;
+    border-left: 4px solid #849E8A !important;
+    background: #FFFFFF !important;
+    color: #2C3E2D !important;
+}
+
+.messagelist li.success {
+    background: #e8f0ea !important;
+    border-left-color: #849E8A !important;
+}
+
+.messagelist li.warning {
+    background: #fef3cd !important;
+    border-left-color: #d97706 !important;
+}
+
+.messagelist li.error {
+    background: #fce4e4 !important;
+    border-left-color: #c0392b !important;
+}
+
+/* ── Login page ─────────────────────────────────────────────────────── */
+body.login {
+    background: #F9F8F6 !important;
+}
+
+body.login #header {
+    background: #FFFFFF !important;
+    border-bottom: 1px solid #E5E0D8 !important;
+}
+
+body.login #header h1,
+body.login #header h1 a {
+    color: #2C3E2D !important;
+}
+
+body.login #content {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+body.login .submit-row {
+    border: none !important;
+    background: transparent !important;
+}
+
+body.login label {
+    color: #2C3E2D !important;
+}
+
+/* ── Nav sidebar ────────────────────────────────────────────────────── */
+nav.sidebar,
+#nav-sidebar {
+    background: #FFFFFF !important;
+    border-right: 1px solid #E5E0D8 !important;
+}
+
+#nav-sidebar .module h2 {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+}
+
+#nav-sidebar .module th {
+    background: transparent !important;
+}
+
+#nav-sidebar a {
+    color: #849E8A !important;
+}
+
+#nav-sidebar a:hover {
+    color: #6B8572 !important;
+}
+
+#nav-sidebar .current-app a,
+#nav-sidebar .current-model a {
+    color: #2C3E2D !important;
+    font-weight: 600;
+}
+
+#toggle-nav-sidebar {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+    border-right: 1px solid #E5E0D8 !important;
+}
+
+/* ── Related-widget (+ 🔍 icons next to FK dropdowns) ───────────────── */
+.related-widget-wrapper select {
+    border-radius: 6px;
+}
+
+/* ── Calendar / date shortcuts ──────────────────────────────────────── */
+.calendarbox,
+.clockbox {
+    border-radius: 8px;
+    border-color: #E5E0D8 !important;
+    background: #FFFFFF !important;
+}
+
+/* ── Collapse toggle ────────────────────────────────────────────────── */
+fieldset.collapse .collapse-toggle {
+    color: #849E8A !important;
+}
+
+fieldset.collapse .collapse-toggle:hover {
+    color: #6B8572 !important;
+}
+
+/* ── Dashboard / index ──────────────────────────────────────────────── */
+.dashboard #content {
+    background: #F9F8F6 !important;
+}
+
+#content-main .module th {
+    background: transparent !important;
+    color: #2C3E2D !important;
+}
+
+caption a:link,
+caption a:visited {
+    color: #2C3E2D !important;
+}
+
+/* ── Date-hierarchy links ───────────────────────────────────────────── */
+.xfull a,
+.xfull a:link,
+.xfull a:visited {
+    color: #849E8A !important;
+}
+
+/* ── Help text & descriptions ───────────────────────────────────────── */
+.help,
+.description {
+    color: #5C6E5D !important;
+}
+
+/* ── Recent-actions sidebar on index page ───────────────────────────── */
+#recent-actions-module {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+}
+
+#recent-actions-module h2 {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+}
+
+#recent-actions-module li {
+    color: #2C3E2D !important;
+    border-bottom: 1px solid #E5E0D8 !important;
+}
+
+/* ── Changelist search bar ──────────────────────────────────────────── */
+#changelist-search {
+    background: transparent !important;
+    border: none !important;
+}
+
+#changelist-search #searchbar {
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 6px;
+    padding: 8px 14px;
+    background: #FFFFFF !important;
+    color: #2C3E2D !important;
+}
+
+#changelist-search #searchbar:focus {
+    border-color: #849E8A !important;
+    box-shadow: 0 0 0 3px rgba(132, 158, 138, 0.15);
+}
+
+/* ── Inline groups ──────────────────────────────────────────────────── */
+.inline-group {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E0D8 !important;
+    border-radius: 8px;
+}
+
+.inline-group h2 {
+    background: #F3F1ED !important;
+    color: #2C3E2D !important;
+}
+
+/* ── Catch-all for any remaining dark backgrounds ───────────────────── */
+#container,
+#main,
+#content-related {
+    background: #F9F8F6 !important;
+}
+
+/* Ensure no element has a dark or black background */
+.module td,
+.module th,
+.module tr {
+    color: #2C3E2D !important;
+}
+
+/* ── Checkbox and selection styling ─────────────────────────────────── */
+input[type="checkbox"] {
+    accent-color: #849E8A;
+}
+
+/* ── Admin "Add" link styling on dashboard ──────────────────────────── */
+.addlink,
+.changelink,
+.viewlink {
+    color: #849E8A !important;
+}
+
+/* ── Sorted column header ───────────────────────────────────────────── */
+table thead th.sorted {
+    background: #EBE8E2 !important;
+}
+
+table thead th a:link,
+table thead th a:visited {
+    color: #2C3E2D !important;
+}
+
+/* ── Sticky header fix ──────────────────────────────────────────────── */
+#header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ── Subtitle under "Select booking to change" (e.g. "4 bookings, 1 waitlisted") ── */
+#content-main h2 {
+    color: #5C6E5D !important;
+    font-weight: 400 !important;
+    font-size: 14px !important;
+    margin-top: -8px !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* ── Slot-clash footnote under the booking list ─────────────────────── */
+.waitlist-slot-notes {
+    margin-top: 10px;
+}
+
+.waitlist-slot-note {
+    color: #5C6E5D !important;
+    font-size: 12.5px;
+    margin: 2px 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PREMIUM MAKEOVER — richer type, depth, and polish on top of the base
+   sage-green theme above. Kept as a separate block so the original
+   palette rules above stay the single source of truth for colour.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Typography ─────────────────────────────────────────────────────── */
+body,
+html {
+    font-family: "Plus Jakarta Sans", "Inter", "Segoe UI", system-ui, -apple-system, sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+#content h1,
+.dashboard h1 {
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+}
+
+/* ── Header: subtle depth + brand accent bar ──────────────────────────── */
+#header {
+    padding: 14px 40px !important;
+    box-shadow: 0 1px 2px rgba(44, 62, 45, 0.05) !important;
+}
+
+#header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #849E8A 0%, #C9A66B 100%);
+}
+
+#header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+#branding h1 {
+    font-weight: 800 !important;
+    letter-spacing: -0.01em;
+    font-size: 20px !important;
+}
+
+/* ── Cards / modules: more depth, gentle lift ─────────────────────────── */
+.module,
+#changelist-filter,
+#result_list,
+.stat-card,
+fieldset,
+.inline-group,
+.paginator,
+.actions {
+    box-shadow: 0 1px 2px rgba(44, 62, 45, 0.04), 0 1px 8px rgba(44, 62, 45, 0.03) !important;
+}
+
+.module {
+    border-radius: 12px !important;
+}
+
+/* ── Buttons: pill shape + lift on hover ──────────────────────────────── */
+input[type="submit"],
+input[type="button"],
+.submit-row input,
+.button,
+a.button,
+.object-tools a {
+    border-radius: 999px !important;
+    padding: 9px 20px !important;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 2px rgba(44, 62, 45, 0.08) !important;
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.submit-row input:hover,
+.button:hover,
+a.button:hover,
+.object-tools a:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(107, 133, 114, 0.28) !important;
+}
+
+/* ── Status pills (rendered by BookingAdmin.status_badge) ────────────── */
+.status-pill {
+    display: inline-block;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Stat strip (per-status count cards above the booking table) ─────── */
+.stat-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 14px 0 18px;
+}
+
+.stat-card {
+    --stat-color: #849E8A;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 118px;
+    background: #FFFFFF;
+    border-left: 4px solid var(--stat-color);
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-decoration: none !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(44, 62, 45, 0.1) !important;
+}
+
+.stat-card.active {
+    outline: 2px solid var(--stat-color);
+    outline-offset: 1px;
+}
+
+.stat-card .stat-count {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--stat-color);
+    line-height: 1.1;
+}
+
+.stat-card .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #5C6E5D !important;
+}
+
+/* ── Search bar: bolder, pill-shaped, premium feel ────────────────────── */
+#changelist-search #searchbar {
+    border-radius: 999px !important;
+    padding: 10px 20px !important;
+    box-shadow: 0 1px 2px rgba(44, 62, 45, 0.05) !important;
+}
+
+#changelist-search input[type="submit"] {
+    border-radius: 999px !important;
+}
+
+/* ── Result table: rounded card wrapper with soft shadow ──────────────── */
+#result_list {
+    border-radius: 12px !important;
+}
+
+#result_list thead th:first-child {
+    border-top-left-radius: 12px;
+}
+
+#result_list thead th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* ── Filter sidebar: section spacing + accent dot on active item ─────── */
+#changelist-filter {
+    border-radius: 12px !important;
+}
+
+#changelist-filter h3 {
+    font-size: 11px !important;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding-top: 10px;
+}
+
+#changelist-filter li.selected a::before {
+    content: "●";
+    color: #849E8A;
+    font-size: 8px;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+/* ── Login card: a touch more presence ────────────────────────────────── */
+body.login #content {
+    box-shadow: 0 8px 32px rgba(44, 62, 45, 0.08) !important;
+    border-radius: 16px !important;
+}

@@ -1,0 +1,40 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'admin/css/index_custom.css' %}">
+{% endblock %}
+
+{% block coltype %}colM{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block content_subtitle %}{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-hero">
+  <p class="dashboard-hero-eyebrow">{% now "l, F j, Y" %}</p>
+  <h1 class="dashboard-hero-title">{{ title }}</h1>
+  {% if dashboard_stats %}
+  <div class="dashboard-hero-stats">
+    {% for stat in dashboard_stats %}
+    <div class="hero-stat">
+      <span class="hero-stat-count">{{ stat.count }}</span>
+      <span class="hero-stat-label">{{ stat.label }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+<div id="content-main" class="app-list app-list-centered">
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

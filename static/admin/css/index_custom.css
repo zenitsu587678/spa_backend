@@ -1,0 +1,291 @@
+/* ── Dashboard layout: center + enlarge the app list, drop the old two-col grid ── */
+.dashboard #content {
+    width: auto !important;
+    max-width: none !important;
+    padding: 44px 40px !important;
+}
+
+.dashboard .colM {
+    margin-right: 0 !important;
+}
+
+.app-list-centered {
+    max-width: 1200px;
+    margin: 0 auto;
+    float: none !important;
+    width: 100% !important;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 28px;
+    align-items: start;
+}
+
+.app-list-centered .module {
+    margin-bottom: 0;
+    border: 1px solid #E4E4E4;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.app-list-centered .module caption {
+    padding: 0;
+}
+
+.app-list-centered .module caption a.section {
+    display: block;
+    padding: 20px 26px;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+}
+
+.app-list-centered .module table {
+    width: 100%;
+}
+
+.app-list-centered .module table th {
+    font-size: 18px;
+    padding: 22px 26px;
+}
+
+.app-list-centered .module table th a {
+    font-size: 18px;
+}
+
+.app-list-centered .module table td {
+    padding: 22px 26px;
+}
+
+.app-list-centered .module table td a {
+    font-size: 15px;
+    padding: 8px 14px;
+}
+
+.app-list-centered .model-booking th a {
+    font-weight: 700;
+}
+
+.dashboard #content-main {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ── "Recent actions" toggle button ─────────────────────────────────── */
+#recent-actions-toggle {
+    position: fixed;
+    top: 96px;
+    right: 0;
+    z-index: 1400;
+    background: #5C6E5D;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 8px 0 0 8px;
+    cursor: pointer;
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.15);
+    transition: background 0.15s ease, padding-right 0.15s ease;
+}
+
+#recent-actions-toggle:hover {
+    background: #4C5C4D;
+    padding-right: 24px;
+}
+
+/* ── Overlay behind the drawer ──────────────────────────────────────── */
+#recent-actions-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 20, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1450;
+}
+
+#recent-actions-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ── Slide-out drawer ────────────────────────────────────────────────── */
+#recent-actions-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 340px;
+    max-width: 85vw;
+    background: #fff;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.18);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    z-index: 1500;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+#recent-actions-drawer.open {
+    transform: translateX(0);
+}
+
+#recent-actions-drawer .drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #E4E4E4;
+    background: #FAFAF7;
+}
+
+#recent-actions-drawer .drawer-header h2 {
+    margin: 0;
+    font-size: 16px;
+    color: #2F3A30;
+}
+
+#recent-actions-close {
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    color: #5C6E5D;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+#recent-actions-drawer #recent-actions-module {
+    padding: 8px 20px 24px;
+}
+
+#recent-actions-drawer h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8A8A82;
+    margin-top: 18px;
+}
+
+@media (max-width: 640px) {
+    #recent-actions-toggle {
+        top: 76px;
+        padding: 10px 14px;
+        font-size: 11px;
+    }
+}
+
+/* ── Dashboard card hover lift (matches the premium makeover) ────────── */
+.app-list-centered .module {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.app-list-centered .module:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(44, 62, 45, 0.08) !important;
+}
+
+.app-list-centered .module table tr {
+    transition: background 0.12s ease;
+}
+
+.app-list-centered .module table tr:hover {
+    background: #F3F6F3;
+}
+
+/* ── Dashboard hero band ───────────────────────────────────────────────── */
+.dashboard-hero {
+    max-width: 1200px;
+    margin: 0 auto 32px;
+    padding: 36px 40px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #24322A 0%, #3F5443 45%, #6B8572 100%);
+    box-shadow: 0 10px 30px rgba(36, 50, 42, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-hero::before {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 166, 107, 0.35) 0%, rgba(201, 166, 107, 0) 70%);
+}
+
+.dashboard-hero-eyebrow {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+}
+
+#content h1.dashboard-hero-title {
+    color: #FFFFFF !important;
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px !important;
+}
+
+.dashboard-hero-subtitle {
+    color: rgba(255, 255, 255, 0.78) !important;
+    font-size: 14px;
+    margin: 0 0 24px;
+}
+
+.dashboard-hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-stat {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    padding: 14px 22px;
+    min-width: 140px;
+    backdrop-filter: blur(6px);
+}
+
+.hero-stat-count {
+    display: block;
+    color: #FFFFFF;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.hero-stat-label {
+    display: block;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+}
+
+/* ── Icon accents on each app-list model row ──────────────────────────── */
+.app-list-centered .model-booking th a::before   { content: "📅  "; }
+.app-list-centered .model-service th a::before   { content: "🧴  "; }
+.app-list-centered .model-timeslot th a::before  { content: "🕒  "; }
+.app-list-centered .model-group th a::before     { content: "👥  "; }
+.app-list-centered .model-user th a::before      { content: "👤  "; }
+
+@media (max-width: 900px) {
+    .dashboard-hero {
+        padding: 28px 24px;
+    }
+}

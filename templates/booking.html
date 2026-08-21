@@ -1,0 +1,266 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book your sanctuary — Luxury Spa</title>
+{% if sitekey %}<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>{% endif %}
+<style>
+  :root {
+    --primary: #8a7355;
+    --text-dark: #2f2b26;
+    --text-body: #57514a;
+    --border-light: #e2ddd4;
+    --bg-light: #f7f4ef;
+    --surface: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg-light); color: var(--text-body);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300; line-height: 1.6;
+  }
+  .page { max-width: 780px; margin: 0 auto; padding: 56px 20px; }
+  .eyebrow {
+    color: var(--primary); text-transform: uppercase; letter-spacing: .18em;
+    font-size: 12px; font-weight: 600; display: block; margin-bottom: 10px;
+  }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 40px;
+       color: var(--text-dark); margin: 0 0 12px; font-weight: 400; }
+  h2 { font-family: Georgia, serif; font-size: 22px; color: var(--text-dark);
+       font-weight: 400; margin: 34px 0 20px; padding-bottom: 8px;
+       border-bottom: 1px solid var(--border-light); }
+  .head { text-align: center; margin-bottom: 40px; }
+  .card { background: var(--surface); border-radius: 16px; padding: 40px;
+          box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .full { grid-column: 1 / -1; }
+  label.fld { display: block; font-size: 11px; font-weight: 500; color: var(--text-dark);
+              text-transform: uppercase; letter-spacing: .1em; margin-bottom: 7px; }
+  input[type=text], input[type=email], input[type=tel], input[type=date],
+  select, textarea {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border-light);
+    border-radius: 8px; background: #fff; color: var(--text-body);
+    font-size: 15px; font-family: inherit; font-weight: 300;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary);
+  }
+  textarea { resize: vertical; }
+  .consent { display: flex; gap: 12px; align-items: flex-start; margin-top: 26px; font-size: 14px; }
+  .consent input { margin-top: 4px; width: 16px; height: 16px; }
+  .turnstile-wrap { display: flex; justify-content: center; margin-top: 26px; }
+  button {
+    width: 100%; margin-top: 28px; padding: 16px; border: 0; border-radius: 8px;
+    background: var(--primary); color: #fff; font-size: 16px; font-weight: 500;
+    font-family: inherit; cursor: pointer;
+  }
+  button:disabled { opacity: .6; cursor: default; }
+  .banner { padding: 14px 18px; border-radius: 8px; margin-bottom: 22px;
+            font-size: 14px; display: none; white-space: pre-line; }
+  .banner.err { background: #fdeaea; color: #8c2a2a; border: 1px solid #f0c2c2; display: block; }
+  .banner.ok  { background: #e7f5ee; color: #1c6b46; border: 1px solid #b9e0cd; display: block; }
+  .devnote { text-align: center; font-size: 12px; color: #9b9488; margin-top: 22px; }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .card { padding: 26px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <span class="eyebrow">Reservation</span>
+    <h1>Book your sanctuary</h1>
+    <p>Please fill out the details below to request your spa appointment.
+       Our team will review and confirm your booking.</p>
+  </div>
+
+  <div class="card">
+    <div id="banner" class="banner"></div>
+
+    <form id="bookingForm">
+      <h2 style="margin-top:0">Personal information</h2>
+      <div class="grid">
+        <div>
+          <label class="fld" for="fullName">Full name *</label>
+          <input type="text" id="fullName" name="fullName" required>
+        </div>
+        <div>
+          <label class="fld" for="email">Email address *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="full">
+          <label class="fld" for="phone">Phone number *</label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+      </div>
+
+      <h2>Appointment details</h2>
+      <div class="grid">
+        <div class="full">
+          <label class="fld" for="service">Spa service *</label>
+          <select id="service" name="service" required>
+            <option value="" disabled selected>Select a treatment...</option>
+            {% for s in services %}
+            <option value="{{ s.code }}">{{ s.name }} ({{ s.duration_minutes }} min - ${{ s.price|floatformat:0 }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="fld" for="date">Preferred date *</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+        <div>
+          <label class="fld" for="time">Preferred time *</label>
+          <select id="time" name="time" required>
+            <option value="" disabled selected>Select a date first...</option>
+          </select>
+          <div id="timeHint" style="font-size:12px;color:#9b9488;margin-top:6px;"></div>
+        </div>
+        <div class="full">
+          <label class="fld" for="therapist">Preferred therapist (optional)</label>
+          <input type="text" id="therapist" name="therapist" placeholder="No preference">
+        </div>
+        <div class="full">
+          <label class="fld" for="notes">Additional notes or special requests (optional)</label>
+          <textarea id="notes" name="notes" rows="4"
+            placeholder="Let us know if you have any allergies, focus areas, or special needs..."></textarea>
+        </div>
+      </div>
+
+      {% if sitekey %}
+      <div class="turnstile-wrap">
+        <div class="cf-turnstile" data-sitekey="{{ sitekey }}"></div>
+      </div>
+      {% endif %}
+
+      <div class="consent">
+        <input type="checkbox" id="consent" name="consent" required>
+        <label for="consent">I agree to the Privacy Policy and consent to having my
+          booking details processed.</label>
+      </div>
+
+      <button type="submit" id="submitBtn">Book appointment</button>
+    </form>
+  </div>
+
+  <p class="devnote">Local test page served by Django. Submissions appear in
+     <a href="/admin/bookings/booking/">the admin</a>.</p>
+</div>
+
+<script>
+  var form = document.getElementById('bookingForm');
+  var btn = document.getElementById('submitBtn');
+  var banner = document.getElementById('banner');
+  var CAPTCHA_ON = {{ require_captcha|yesno:"true,false" }};
+
+  var dateInput = document.getElementById('date');
+  var timeSelect = document.getElementById('time');
+  var timeHint = document.getElementById('timeHint');
+  dateInput.min = new Date().toISOString().split('T')[0];
+
+  // Rebuilds the time dropdown to only show slots that are actually open
+  // for the chosen date -- a slot already taken disappears just for that
+  // date, not permanently; pick a different date and it reappears.
+  function refreshTimesForDate() {
+    var date = dateInput.value;
+    timeSelect.innerHTML = '';
+    timeHint.textContent = '';
+    if (!date) {
+      var opt = document.createElement('option');
+      opt.value = ''; opt.disabled = true; opt.selected = true;
+      opt.textContent = 'Select a date first...';
+      timeSelect.appendChild(opt);
+      return;
+    }
+
+    var placeholder = document.createElement('option');
+    placeholder.value = ''; placeholder.disabled = true; placeholder.selected = true;
+    placeholder.textContent = 'Loading times...';
+    timeSelect.appendChild(placeholder);
+    timeSelect.disabled = true;
+
+    fetch('/api/available-times/?date=' + encodeURIComponent(date))
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        timeSelect.innerHTML = '';
+        timeSelect.disabled = false;
+        if (!res.success) {
+          timeHint.textContent = res.error || 'Could not load times for that date.';
+          return;
+        }
+        if (!res.times.length) {
+          var none = document.createElement('option');
+          none.value = ''; none.disabled = true; none.selected = true;
+          none.textContent = 'No times available on this date';
+          timeSelect.appendChild(none);
+          timeHint.textContent = 'Fully booked -- try another date, or submit and you\'ll be waitlisted.';
+          return;
+        }
+        var ph = document.createElement('option');
+        ph.value = ''; ph.disabled = true; ph.selected = true;
+        ph.textContent = 'Select a time...';
+        timeSelect.appendChild(ph);
+        res.times.forEach(function (t) {
+          var o = document.createElement('option');
+          o.value = t.value; o.textContent = t.label;
+          timeSelect.appendChild(o);
+        });
+      })
+      .catch(function () {
+        timeSelect.disabled = false;
+        timeHint.textContent = 'Could not reach the backend to load times.';
+      });
+  }
+
+  dateInput.addEventListener('change', refreshTimesForDate);
+
+  function show(kind, text) {
+    banner.className = 'banner ' + kind;
+    banner.textContent = text;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    banner.className = 'banner';
+
+    var payload = {};
+    new FormData(form).forEach(function (v, k) { payload[k] = v; });
+    payload.consent = document.getElementById('consent').checked ? 'on' : '';
+
+    if (CAPTCHA_ON) {
+      var el = document.querySelector('[name="cf-turnstile-response"]');
+      var token = el ? el.value : '';
+      if (!token) { show('err', 'Please complete the security check before submitting.'); return; }
+      payload['cf-turnstile-response'] = token;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+
+    fetch('/api/book/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      if (res.success) {
+        window.location.href = '/booking-confirmation/?ref=' + res.booking.booking_id;
+      } else {
+        show('err', res.details ? res.details.join('\n') : res.error);
+        btn.disabled = false;
+        btn.textContent = 'Book appointment';
+        if (window.turnstile) window.turnstile.reset();
+      }
+    })
+    .catch(function (err) {
+      show('err', 'Could not reach the backend: ' + err);
+      btn.disabled = false;
+      btn.textContent = 'Book appointment';
+      if (window.turnstile) window.turnstile.reset();
+    });
+  });
+</script>
+</body>
+</html>

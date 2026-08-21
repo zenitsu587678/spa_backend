@@ -1,0 +1,30 @@
+<!--
+  Custom admin base_site.html — injects the spa's white-and-sage CSS.
+
+  WHY THIS DOESN'T CAUSE INFINITE TEMPLATE RECURSION:
+  Django's template loader checks directories in order. Because our project-level
+  "templates/" folder is listed in TEMPLATES[0]["DIRS"], this file is found FIRST
+  when any admin template references "admin/base_site.html".
+
+  However, *this* file extends "admin/base.html", NOT "admin/base_site.html".
+  "admin/base.html" resolves through APP_DIRS to Django's own contrib/admin
+  template, so there is no circular reference. Our file simply intercepts the
+  base_site layer, adds the extra stylesheet, and delegates everything else to
+  Django's built-in admin/base.html.
+-->
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'admin/css/admin_custom.css' %}">
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}">{{ site_header|default:"Django administration" }}</a>
+  </h1>
+{% endblock %}

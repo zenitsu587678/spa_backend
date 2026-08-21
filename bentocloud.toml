@@ -1,0 +1,29 @@
+[app]
+name = "spa_backend"
+
+[deploy]
+release_commands = [
+    "python manage.py migrate --noinput",
+    "python manage.py createsuperuser --no-input"
+]
+
+
+
+[processes.web]
+command = "gunicorn spabackend.wsgi --bind 0.0.0.0:8000"
+http = true
+http_port = 8000
+uat_http_port = 8001
+uat_command = "gunicorn spabackend.wsgi --bind 0.0.0.0:8001"
+http_path = "/"
+health_check = "/health/"
+instances = 2
+
+
+[resources]
+cpu = "0.5"
+memory = "512MB"
+
+[resources.worker]
+cpu = "1"
+memory = "1GB"

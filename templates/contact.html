@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us — Luxury Spa</title>
+<style>
+  :root {
+    --primary: #8a7355;
+    --text-dark: #2f2b26;
+    --text-body: #57514a;
+    --border-light: #e2ddd4;
+    --bg-light: #f7f4ef;
+    --surface: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg-light); color: var(--text-body);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300; line-height: 1.6;
+  }
+  .page { max-width: 640px; margin: 0 auto; padding: 56px 20px; }
+  .eyebrow {
+    color: var(--primary); text-transform: uppercase; letter-spacing: .18em;
+    font-size: 12px; font-weight: 600; display: block; margin-bottom: 10px;
+  }
+  h1 { font-family: Georgia, "Times New Roman", serif; font-size: 36px;
+       color: var(--text-dark); margin: 0 0 12px; font-weight: 400; }
+  .head { text-align: center; margin-bottom: 40px; }
+  .card { background: var(--surface); border-radius: 16px; padding: 40px;
+          box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+  label.fld { display: block; font-size: 11px; font-weight: 500; color: var(--text-dark);
+              text-transform: uppercase; letter-spacing: .1em; margin-bottom: 7px; }
+  input[type=text], input[type=email], textarea {
+    width: 100%; padding: 12px 14px; border: 1px solid var(--border-light);
+    border-radius: 8px; background: #fff; color: var(--text-body);
+    font-size: 15px; font-family: inherit; font-weight: 300; margin-bottom: 20px;
+  }
+  input:focus, textarea:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary);
+  }
+  input:disabled, textarea:disabled { background: #f3f0ea; color: #9b9488; }
+  textarea { resize: vertical; }
+  button {
+    width: 100%; margin-top: 8px; padding: 16px; border: 0; border-radius: 8px;
+    background: var(--primary); color: #fff; font-size: 16px; font-weight: 500;
+    font-family: inherit; cursor: pointer;
+  }
+  button:disabled { opacity: .6; cursor: default; }
+  .banner { padding: 14px 18px; border-radius: 8px; margin-bottom: 22px;
+            font-size: 14px; display: none; white-space: pre-line; }
+  .banner.err { background: #fdeaea; color: #8c2a2a; border: 1px solid #f0c2c2; display: block; }
+  .devnote { text-align: center; font-size: 12px; color: #9b9488; margin-top: 22px; }
+  .hint { font-size: 13px; color: #9b9488; margin: -8px 0 26px; }
+
+  /* Chat transcript, shown after the first message is sent */
+  .chat { display: none; }
+  .chat.active { display: block; }
+  .bubble-row { display: flex; margin-bottom: 16px; }
+  .bubble-row.customer { justify-content: flex-end; }
+  .bubble-row.agent { justify-content: flex-start; }
+  .bubble {
+    max-width: 80%; padding: 12px 16px; border-radius: 14px; font-size: 14.5px;
+    white-space: pre-line;
+  }
+  .bubble .who {
+    display: block; font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; margin-bottom: 4px; opacity: .65;
+  }
+  .bubble-row.customer .bubble {
+    background: var(--primary); color: #fff; border-bottom-right-radius: 4px;
+  }
+  .bubble-row.agent .bubble {
+    background: var(--bg-light); color: var(--text-dark);
+    border: 1px solid var(--border-light); border-bottom-left-radius: 4px;
+  }
+  .bubble-row.agent .bubble.typing { color: #9b9488; font-style: italic; }
+  .bubble-row.agent .bubble.error { background: #fdeaea; border-color: #f0c2c2; color: #8c2a2a; }
+  .outcome-tag {
+    display: inline-block; margin-top: 8px; font-size: 10px; font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px;
+    border-radius: 999px; background: #e7f5ee; color: #1c6b46;
+  }
+  .outcome-tag.waitlisted { background: #fef3cd; color: #8a6300; }
+  .newmsg-row { margin-top: 22px; border-top: 1px solid var(--border-light); padding-top: 22px; }
+  .newmsg-row textarea { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="head">
+    <span class="eyebrow">Get in touch</span>
+    <h1>Contact us</h1>
+    <p>Questions about your booking, or need to change your appointment date?
+       Let us know below -- our agent replies right here.</p>
+  </div>
+
+  <div class="card">
+    <div id="banner" class="banner"></div>
+
+    <!-- Initial form -->
+    <form id="contactForm">
+      <label class="fld" for="name">Full name *</label>
+      <input type="text" id="name" name="name" required>
+
+      <label class="fld" for="email">Email address *</label>
+      <input type="email" id="email" name="email" required>
+      <div class="hint">Use the same name and email you booked with if you're asking about an existing appointment.</div>
+
+      <label class="fld" for="message">Message *</label>
+      <textarea id="message" name="message" rows="5" required
+        placeholder="e.g. Hi, I won't be able to make it for my appointment, could I change my booking date to 25 August?"></textarea>
+
+      <button type="submit" id="submitBtn">Send message</button>
+    </form>
+
+    <!-- Chat transcript, revealed after the first send -->
+    <div class="chat" id="chat">
+      <div id="messages"></div>
+      <div class="newmsg-row">
+        <textarea id="followupMessage" rows="3" placeholder="Send another message..."></textarea>
+        <button type="button" id="followupBtn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="devnote">Local test page served by Django. Every message + the agent's
+     reply also appear in <a href="/admin/bookings/contactmessage/">the admin</a>
+     so you can verify it's actually receiving and processing them.</p>
+</div>
+
+<script>
+  var form = document.getElementById('contactForm');
+  var btn = document.getElementById('submitBtn');
+  var banner = document.getElementById('banner');
+  var chat = document.getElementById('chat');
+  var messages = document.getElementById('messages');
+  var followupInput = document.getElementById('followupMessage');
+  var followupBtn = document.getElementById('followupBtn');
+
+  var customerName = '';
+  var customerEmail = '';
+
+  function showError(text) {
+    banner.className = 'banner err';
+    banner.textContent = text;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function addBubble(who, text, extraClass) {
+    var row = document.createElement('div');
+    row.className = 'bubble-row ' + who;
+    var bubble = document.createElement('div');
+    bubble.className = 'bubble' + (extraClass ? ' ' + extraClass : '');
+    var label = document.createElement('span');
+    label.className = 'who';
+    label.textContent = who === 'customer' ? 'You' : 'Spa agent';
+    bubble.appendChild(label);
+    bubble.appendChild(document.createTextNode(text));
+    row.appendChild(bubble);
+    messages.appendChild(row);
+    messages.scrollTop = messages.scrollHeight;
+    return row;
+  }
+
+  function addTypingBubble() {
+    return addBubble('agent', 'Thinking...', 'typing');
+  }
+
+  function outcomeTag(outcome) {
+    var labels = {
+      rescheduled: 'Booking updated', waitlisted: 'Added to waitlist',
+      no_booking_found: 'No matching booking', needs_clarification: 'Needs more info',
+      received: 'Message received',
+    };
+    if (!labels[outcome]) return null;
+    var tag = document.createElement('span');
+    tag.className = 'outcome-tag' + (outcome === 'waitlisted' ? ' waitlisted' : '');
+    tag.textContent = labels[outcome];
+    return tag;
+  }
+
+  function sendMessage(name, email, text) {
+    var typingRow = addTypingBubble();
+
+    return fetch('/api/contact/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, message: text })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (res) {
+      typingRow.remove();
+      if (res.success) {
+        var bubbleRow = addBubble('agent', res.message || 'Thanks -- we received your message.');
+        var tag = outcomeTag(res.outcome);
+        if (tag) bubbleRow.querySelector('.bubble').appendChild(document.createElement('br')), bubbleRow.querySelector('.bubble').appendChild(tag);
+      } else {
+        addBubble('agent', res.error || 'Something went wrong. Please try again.', 'error');
+      }
+    })
+    .catch(function (err) {
+      typingRow.remove();
+      addBubble('agent', 'Could not reach the backend: ' + err, 'error');
+    });
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    banner.className = 'banner';
+
+    customerName = document.getElementById('name').value.trim();
+    customerEmail = document.getElementById('email').value.trim();
+    var text = document.getElementById('message').value.trim();
+    if (!customerName || !customerEmail || !text) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    addBubble('customer', text);
+    chat.classList.add('active');
+    form.style.display = 'none';
+
+    sendMessage(customerName, customerEmail, text).then(function () {
+      btn.disabled = false;
+      btn.textContent = 'Send message';
+    });
+  });
+
+  followupBtn.addEventListener('click', function () {
+    var text = followupInput.value.trim();
+    if (!text) return;
+    followupBtn.disabled = true;
+    addBubble('customer', text);
+    followupInput.value = '';
+    sendMessage(customerName, customerEmail, text).then(function () {
+      followupBtn.disabled = false;
+    });
+  });
+
+  followupInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      followupBtn.click();
+    }
+  });
+</script>
+</body>
+</html>
